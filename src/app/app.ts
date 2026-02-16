@@ -1,19 +1,15 @@
-import { Component, inject, OnInit, signal, ViewContainerRef } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { Search } from './components/search/search';
+import { HttpClient } from '@angular/common/http';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterOutlet } from '@angular/router';
+import { Auth } from './auth';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Search],
+  imports: [RouterOutlet, FormsModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
-  searchKeyword = signal('Github')
+export class App{
 
-  logKeywordChange(data: string) {
-    console.log('From App Component', data);
-    
-  }
 }

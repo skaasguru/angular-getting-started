@@ -1,0 +1,9 @@
+<p>dashboard works!</p>
+
+<ul>
+@for (id of userIds; track id) {
+    <li>
+        <a [routerLink]="['/user', id]" class="border m-3">User {{id}}</a>
+    </li>
+}
+</ul>
