@@ -1,0 +1,92 @@
+<div class="max-w-md mx-auto">
+  <h1 class="text-2xl font-bold text-slate-800 mb-6">Template-driven Form</h1>
+
+  <form #form="ngForm" (ngSubmit)="onSubmit(form)" class="space-y-4">
+    <div>
+      <label for="name" class="block text-sm font-medium text-slate-700 mb-1">Name</label>
+      <input
+        id="name"
+        type="text"
+        name="name"
+        [(ngModel)]="name"
+        #nameCtrl="ngModel"
+        required
+        minlength="2"
+        class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+      />
+      @if (nameCtrl.invalid && nameCtrl.touched) {
+        <p class="text-red-600 text-sm mt-1">
+          @if (nameCtrl.errors?.['required']) { Name is required. }
+          @if (nameCtrl.errors?.['minlength']) { Name must be at least 2 characters. }
+        </p>
+      }
+    </div>
+
+    <div>
+      <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+      <input
+        id="email"
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        #emailCtrl="ngModel"
+        required
+        email
+        class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+      />
+      @if (emailCtrl.invalid && emailCtrl.touched) {
+        <p class="text-red-600 text-sm mt-1">
+          @if (emailCtrl.errors?.['required']) { Email is required. }
+          @if (emailCtrl.errors?.['email']) { Please enter a valid email. }
+        </p>
+      }
+    </div>
+
+    <div>
+      <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+      <input
+        id="password"
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        #passwordCtrl="ngModel"
+        required
+        minlength="8"
+        class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+      />
+      @if (passwordCtrl.invalid && passwordCtrl.touched) {
+        <p class="text-red-600 text-sm mt-1">
+          @if (passwordCtrl.errors?.['required']) { Password is required. }
+          @if (passwordCtrl.errors?.['minlength']) { Password must be at least 8 characters. }
+        </p>
+      }
+    </div>
+
+    <div>
+      <label for="confirmPassword" class="block text-sm font-medium text-slate-700 mb-1">Confirm Password</label>
+      <input
+        id="confirmPassword"
+        type="password"
+        name="confirmPassword"
+        [(ngModel)]="confirmPassword"
+        #confirmPasswordCtrl="ngModel"
+        required
+        class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+      />
+      @if (confirmPasswordCtrl.touched && password !== confirmPassword) {
+        <p class="text-red-600 text-sm mt-1">Passwords do not match.</p>
+      }
+      @if (confirmPasswordCtrl.invalid && confirmPasswordCtrl.touched && password === confirmPassword) {
+        <p class="text-red-600 text-sm mt-1">Confirm password is required.</p>
+      }
+    </div>
+
+    <button
+      type="submit"
+      [disabled]="form.invalid || password !== confirmPassword"
+      class="w-full py-2 px-4 bg-slate-800 text-white rounded hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      Submit
+    </button>
+  </form>
+</div>

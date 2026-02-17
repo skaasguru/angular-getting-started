@@ -22,6 +22,15 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', loadComponent: () => import('./components/dashboard/dashboard').then(m => m.Dashboard) },
       {
+        path: 'template-form',
+        loadComponent: () =>
+          import('./components/template-driven-form/template-driven-form').then(m => m.TemplateDrivenForm),
+      },
+      {
+        path: 'reactive-form',
+        loadComponent: () => import('./components/reactive-form/reactive-form').then(m => m.ReactiveForm),
+      },
+      {
         path: 'user/:id',
         loadComponent: () => import('./components/user/user').then(m => m.User),
         data: {
