@@ -1,0 +1,220 @@
+<div class="max-w-5xl mx-auto space-y-8 pb-8">
+  <h1 class="text-3xl font-bold text-slate-800">RxJS Demo</h1>
+  <p class="text-slate-600">
+    Interactive demos for transformation and filtering operators, combination operators, Subject types, and operator chaining.
+  </p>
+
+  <!-- 1. Transformation operators -->
+  <section class="card">
+    <h2 class="section-title">1. Transformation operators</h2>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="demo-box">
+        <h3 class="demo-title">map</h3>
+        <p class="text-sm text-slate-600 mb-2">of(1,2,3,4,5).pipe(map(x =&gt; '#' + (x*10)))</p>
+        <button type="button" class="btn" (click)="runMap()">Run map</button>
+        <div class="output">
+          <span class="label">Input:</span> {{ mapInput() }}
+        </div>
+        <div class="output">
+          <span class="label">Output:</span> {{ mapOutput() }}
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <h3 class="demo-title">switchMap</h3>
+        <p class="text-sm text-slate-600 mb-2">Click fast several times: only the latest click's inner observable runs (previous is cancelled).</p>
+        <div class="flex gap-2 mb-2">
+          <button type="button" class="btn" (click)="runSwitchMap()">Emit (switchMap)</button>
+          <button type="button" class="btn-sm" (click)="clearSwitchMap()">Clear</button>
+        </div>
+        <div class="output">
+          <span class="label">Clicks:</span> {{ switchMapClicks() }}
+        </div>
+        <div class="output">
+          <span class="label">Output (only latest click):</span> {{ switchMapOutput() }}
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <h3 class="demo-title">mergeMap</h3>
+        <p class="text-sm text-slate-600 mb-2">Click several times: inner streams run in parallel; emissions interleave.</p>
+        <div class="flex gap-2 mb-2">
+          <button type="button" class="btn" (click)="runMergeMap()">Emit (mergeMap)</button>
+          <button type="button" class="btn-sm" (click)="clearMergeMap()">Clear</button>
+        </div>
+        <div class="output">
+          <span class="label">Output (interleaved):</span> {{ mergeMapOutput() }}
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <h3 class="demo-title">concatMap</h3>
+        <p class="text-sm text-slate-600 mb-2">Click several times: each inner runs to completion before the next starts (strict order).</p>
+        <div class="flex gap-2 mb-2">
+          <button type="button" class="btn" (click)="runConcatMap()">Emit (concatMap)</button>
+          <button type="button" class="btn-sm" (click)="clearConcatMap()">Clear</button>
+        </div>
+        <div class="output">
+          <span class="label">Output (sequential):</span> {{ concatMapOutput() }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Filtering operators -->
+  <section class="card">
+    <h2 class="section-title">2. Filtering operators</h2>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="demo-box">
+        <h3 class="demo-title">filter</h3>
+        <p class="text-sm text-slate-600 mb-2">of(1..10).pipe(filter(x => x % 2 === 0))</p>
+        <button type="button" class="btn" (click)="runFilter()">Run filter</button>
+        <div class="output">
+          <span class="label">Input:</span> {{ filterInput() }}
+        </div>
+        <div class="output">
+          <span class="label">Output (evens):</span> {{ filterOutput() }}
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <h3 class="demo-title">take</h3>
+        <p class="text-sm text-slate-600 mb-2">interval(200).pipe(take(5))</p>
+        <button type="button" class="btn" (click)="runTake()">Run take</button>
+        <div class="output">
+          <span class="label">Output:</span> {{ takeOutput() }}
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <h3 class="demo-title">debounceTime(400ms)</h3>
+        <p class="text-sm text-slate-600 mb-2">Type below; output updates 400ms after you stop typing.</p>
+        <input
+          type="text"
+          class="input"
+          placeholder="Type here..."
+          [value]="debounceInput()"
+          (input)="onDebounceInput($any($event.target).value)"
+        />
+        <div class="output">
+          <span class="label">Debounced:</span> {{ debounceOutput() || '(waiting)' }}
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <h3 class="demo-title">distinctUntilChanged</h3>
+        <p class="text-sm text-slate-600 mb-2">Only consecutive duplicates are skipped.</p>
+        <div class="flex flex-wrap gap-2 mb-2">
+          <button type="button" class="btn-sm" (click)="onDistinctEmit('A')">A</button>
+          <button type="button" class="btn-sm" (click)="onDistinctEmit('A')">A</button>
+          <button type="button" class="btn-sm" (click)="onDistinctEmit('B')">B</button>
+          <button type="button" class="btn-sm" (click)="onDistinctEmit('A')">A</button>
+          <button type="button" class="btn-sm" (click)="resetDistinct()">Reset</button>
+        </div>
+        <div class="output">
+          <span class="label">Emitted:</span> {{ distinctInput() }}
+        </div>
+        <div class="output">
+          <span class="label">distinctUntilChanged:</span> {{ distinctOutput() }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Combination operators -->
+  <section class="card">
+    <h2 class="section-title">3. Combination operators</h2>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="demo-box">
+        <h3 class="demo-title">combineLatest</h3>
+        <p class="text-sm text-slate-600 mb-2">Emits when any source emits; each emission has latest from all.</p>
+        <button type="button" class="btn" (click)="runCombineLatest()">Run combineLatest</button>
+        <div class="output">
+          <span class="label">Log:</span> {{ combineOutput() }}
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <h3 class="demo-title">merge</h3>
+        <p class="text-sm text-slate-600 mb-2">Interleaves emissions from two streams (A and B).</p>
+        <button type="button" class="btn" (click)="runMerge()">Run merge</button>
+        <div class="output">
+          <span class="label">Output:</span> {{ mergeOutput() }}
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <h3 class="demo-title">zip</h3>
+        <p class="text-sm text-slate-600 mb-2">Pairs emissions by index; completes when shortest completes.</p>
+        <button type="button" class="btn" (click)="runZip()">Run zip</button>
+        <div class="output">
+          <span class="label">Output:</span> {{ zipOutput() }}
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <h3 class="demo-title">forkJoin</h3>
+        <p class="text-sm text-slate-600 mb-2">Waits for all to complete; emits single object of last values.</p>
+        <button type="button" class="btn" (click)="runForkJoin()">Run forkJoin</button>
+        <div class="output output-pre">{{ forkJoinOutput() || '(click to run)' }}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Subject types -->
+  <section class="card">
+    <h2 class="section-title">4. Subject types</h2>
+
+    <div class="grid gap-6 md:grid-cols-3">
+      <div class="demo-box">
+        <h3 class="demo-title">BehaviorSubject</h3>
+        <p class="text-sm text-slate-600 mb-2">New subscribers get current value immediately.</p>
+        <div class="flex gap-2 mb-2">
+          <button type="button" class="btn-sm" (click)="emitBehavior(1)">1</button>
+          <button type="button" class="btn-sm" (click)="emitBehavior(2)">2</button>
+          <button type="button" class="btn-sm" (click)="emitBehavior(3)">3</button>
+        </div>
+        <div class="output">
+          <span class="label">Current:</span> {{ behaviorCurrent() }}
+        </div>
+        <div class="output">
+          <span class="label">Log:</span> {{ behaviorLog() }}
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <h3 class="demo-title">ReplaySubject(3)</h3>
+        <p class="text-sm text-slate-600 mb-2">New subscribers get last 3 values replayed, then live.</p>
+        <div class="output">
+          <span class="label">Log:</span> {{ replayLog() }}
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <h3 class="demo-title">AsyncSubject</h3>
+        <p class="text-sm text-slate-600 mb-2">Emits only the last value when it completes.</p>
+        <div class="output">
+          <span class="label">Log:</span> {{ asyncLog() }}
+        </div>
+        <div class="output">
+          <span class="label">On complete:</span> {{ asyncFinal() }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Operator chaining -->
+  <section class="card">
+    <h2 class="section-title">5. Operator chaining</h2>
+    <p class="text-slate-600 mb-4">
+      of(1..10).pipe(filter(even), take(3), map(x =&gt; x*10), map(x =&gt; 'Chain: ' + x))
+    </p>
+    <button type="button" class="btn" (click)="runChainAgain()">Run chain again</button>
+    <div class="output">
+      <span class="label">Output:</span> {{ chainOutput() }}
+    </div>
+  </section>
+</div>

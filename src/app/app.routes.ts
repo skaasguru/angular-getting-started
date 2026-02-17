@@ -31,6 +31,10 @@ export const routes: Routes = [
         loadComponent: () => import('./components/reactive-form/reactive-form').then(m => m.ReactiveForm),
       },
       {
+        path: 'rxjs-demo',
+        loadComponent: () => import('./components/rxjs-demo/rxjs-demo').then(m => m.RxjsDemo),
+      },
+      {
         path: 'user/:id',
         loadComponent: () => import('./components/user/user').then(m => m.User),
         data: {
